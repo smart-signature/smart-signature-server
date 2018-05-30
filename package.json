@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-smart-signature-server",
+    "start:docker": "egg-scripts start",
     "stop": "egg-scripts stop --title=egg-server-smart-signature-server",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
