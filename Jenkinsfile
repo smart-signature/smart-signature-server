@@ -18,6 +18,7 @@ node {
     GCP_CLUSTER = cfg.gcp.cluster
     GCP_ZONE = cfg.gcp.zone
     APP_NAME = cfg.appName
+    SQL_INSTANCE_CONNECTION_NAME = cfg.gcp.sql_instance_connection_name
     IMAGE_TAG = "gcr.io/${GCP_PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
   }
 
@@ -54,6 +55,7 @@ node {
               sh "sed -i.bak 's#APP_NAME#${APP_NAME}#' ./k8s/deployment.yaml"
               sh "sed -i.bak 's#IMAGE_TAG#${IMAGE_TAG}#' ./k8s/deployment.yaml"
               sh "sed -i.bak 's#NAMESPACE#${NAMESPACE}#' ./k8s/deployment.yaml"
+              sh "sed -i.bak 's#SQL_INSTANCE_CONNECTION_NAME#${SQL_INSTANCE_CONNECTION_NAME}#' ./k8s/deployment.yaml"
 
               sh 'cat ./k8s/deployment.yaml'
 
