@@ -26,6 +26,13 @@ node {
     checkout scm
   }
 
+  stage('NPM run ci(lint && cov)') {
+    docker.image('node:carbon').inside {
+        sh 'npm install'
+        sh 'npm run ci'
+    }
+  }
+
   if (env.BRANCH_NAME == cfg.production.branch) {
     NAMESPACE = cfg.production.namespace
   } else if (env.BRANCH_NAME == cfg.testing.branch) {
