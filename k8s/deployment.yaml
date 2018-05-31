@@ -16,6 +16,10 @@ spec:
         - name: APP_NAME
           image: IMAGE_TAG
           imagePullPolicy: Always
+          volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: /usr/src/app/config
           # The following environment variables will contain the database host,
           # user and password to connect to the PostgreSQL instance.
           env:
@@ -53,4 +57,7 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
+        - name: config-volume
+          secret:
+            secretName: APP_NAME-config
       # [END volumes]
