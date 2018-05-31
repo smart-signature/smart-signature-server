@@ -19,5 +19,22 @@ module.exports = appInfo => {
     password: process.env.POSTGRES_DB_PASSWORD || 'postgres',
   };
 
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+
+  config.smsVerify = {
+    ttl: 60 * 10, // 验证码有效期（秒）
+    mock: '1234', // 如果设置了mock，就不会真正去发短信
+    provider: {
+      type: 'yunpian',
+      api: 'https://sms.yunpian.com/v2/sms/single_send.json',
+      key: '<REPLACE_WITH_YOUR_KEY>',
+      template: '【云片网】您的验证码是',
+    },
+  };
+
   return config;
 };
