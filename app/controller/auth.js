@@ -11,6 +11,23 @@ class AuthController extends Controller {
     ctx.body = { mobile };
   }
 
+  async loginOrRegister() {
+    const ctx = this.ctx;
+    const { mobile, captcha } = ctx.request.body;
+    const isValid = await ctx.service.sms.checkCaptcha({ mobile, captcha });
+
+    if (!isValid) {
+      ctx.throw('验证码不正确');
+    }
+
+    let user = await ctx.service.user.find({ mobile });
+
+    if (!user) {
+      user = await ctx.service.user.create({ mobile });
+    }
+
+    ctx.body = user;
+  }
 }
 
 module.exports = AuthController;

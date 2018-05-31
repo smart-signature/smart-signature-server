@@ -26,7 +26,7 @@ module.exports = appInfo => {
   };
 
   config.smsVerify = {
-    ttl: 60 * 10, // 验证码有效期（秒）
+    ttl: 10, // 验证码有效期（分钟）
     mock: '1234', // 如果设置了mock，就不会真正去发短信
     provider: {
       type: 'yunpian',

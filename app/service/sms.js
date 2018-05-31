@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const moment = require('moment');
 const Service = require('egg').Service;
 
 class SmsService extends Service {
@@ -35,6 +36,23 @@ class SmsService extends Service {
     } else {
       this.ctx.throw(500, '不支持的短信提供商', { provider });
     }
+  }
+
+  async checkCaptcha({ mobile, captcha }) {
+    const { Op } = this.ctx.app.Sequelize;
+    const { ttl } = this.ctx.app.config.smsVerify;
+
+    const count = await this.ctx.model.SmsVerify.count({
+      where: {
+        mobile,
+        captcha,
+        created_at: {
+          [Op.gte]: moment().add(ttl * -1, 'minutes').toDate(),
+        },
+      },
+    });
+
+    return count > 0;
   }
 }
 
