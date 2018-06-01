@@ -26,10 +26,10 @@ node {
     checkout scm
   }
 
-  stage('NPM run ci(lint && cov)') {
+  stage('NPM run lint') {
     docker.image('node:carbon').inside {
         sh 'npm install'
-        sh 'npm run ci'
+        sh 'npm run lint'
     }
   }
 
