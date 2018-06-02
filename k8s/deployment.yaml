@@ -16,10 +16,6 @@ spec:
         - name: APP_NAME
           image: IMAGE_TAG
           imagePullPolicy: Always
-          volumeMounts:
-            - name: config-volume
-              readOnly: true
-              mountPath: /usr/src/app/config
           # The following environment variables will contain the database host,
           # user and password to connect to the PostgreSQL instance.
           env:
@@ -37,6 +33,16 @@ spec:
                   name: cloudsql-db-credentials
                   key: password
             # [END cloudsql_secrets]
+            - name: YUNPIAN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: APP_NAME-env
+                  key: YUNPIAN_KEY
+            - name: SMS_MOCK
+              valueFrom:
+                secretKeyRef:
+                  name: APP_NAME-env
+                  key: SMS_MOCK
         # Change <SQL_INSTANCE_CONNECTION_NAME> here to include your GCP
         # project, the region of your Cloud SQL instance and the name
         # of your Cloud SQL instance. The format is
@@ -57,7 +63,4 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
-        - name: config-volume
-          secret:
-            secretName: APP_NAME-config
       # [END volumes]
