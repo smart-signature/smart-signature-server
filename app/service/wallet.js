@@ -35,6 +35,25 @@ class WalletService extends Service {
     return await ctx.curl('http://faucet.ropsten.be:3001/donate/' + address);
   }
 
+  async syncBalance(address) {
+    const ctx = this.ctx;
+
+    const wallet = await ctx.model.Wallet.find({ where: { address } });
+    if (!wallet) {
+      ctx.throw(404, 'wallet not found');
+    }
+
+    let balance = await ctx.web3.eth.getBalance(address);
+    balance = balance.toString();
+
+    if (balance !== wallet.balance) {
+      wallet.balance = balance;
+      await wallet.save();
+    }
+
+    return wallet;
+  }
+
 }
 
 module.exports = WalletService;

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { STRING, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER, BIGINT } = app.Sequelize;
 
   const Wallet = app.model.define('wallet', {
 
@@ -26,6 +26,12 @@ module.exports = app => {
     privateKey: {
       type: STRING,
       allowNull: false,
+    },
+
+    balance: {
+      type: BIGINT,
+      allowNull: false,
+      defaultValue: 0,
     },
 
   });

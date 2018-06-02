@@ -22,6 +22,12 @@ class WalletController extends Controller {
     });
   }
 
+  async syncBalance() {
+    const ctx = this.ctx;
+    const { address } = ctx.request.body;
+    ctx.body = await ctx.service.wallet.syncBalance(address);
+  }
+
 }
 
 module.exports = WalletController;
