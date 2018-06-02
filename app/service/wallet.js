@@ -30,6 +30,11 @@ class WalletService extends Service {
     });
   }
 
+  async dropToken({ address }) {
+    const ctx = this.ctx;
+    return await ctx.curl('http://faucet.ropsten.be:3001/donate/' + address);
+  }
+
 }
 
 module.exports = WalletService;

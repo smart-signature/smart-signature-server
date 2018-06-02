@@ -9,5 +9,6 @@ module.exports = app => {
   router.post('/sendVerifySMS', controller.auth.sendVerifySMS);
   router.post('/loginOrRegister', controller.auth.loginOrRegister);
   router.post('/admin/db/reset', controller.admin.db.reset);
+  router.post('/admin/wallets/dropToken', controller.admin.wallet.dropToken);
   router.resources('wallets', '/admin/wallets', controller.admin.wallet);
 };
