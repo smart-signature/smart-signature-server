@@ -38,5 +38,10 @@ module.exports = appInfo => {
     },
   };
 
+  config.passportSMS = {
+    usernameField: 'mobile',
+    passwordField: 'captcha',
+  };
+
   return config;
 };

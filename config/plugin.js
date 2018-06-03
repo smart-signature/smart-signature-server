@@ -13,3 +13,8 @@ exports.web3 = {
   enable: true,
   path: path.join(__dirname, '../lib/plugin/egg-web3'),
 };
+
+exports.passport = {
+  enable: true,
+  package: 'egg-passport',
+};
