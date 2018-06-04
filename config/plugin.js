@@ -18,3 +18,7 @@ exports.passport = {
   enable: true,
   package: 'egg-passport',
 };
+
+exports.userrole = {
+  package: 'egg-userrole',
+};
