@@ -28,6 +28,12 @@ class AuthController extends Controller {
 
     ctx.body = user;
   }
+
+  async logout() {
+    const ctx = this.ctx;
+    ctx.logout();
+    ctx.body = {};
+  }
 }
 
 module.exports = AuthController;
