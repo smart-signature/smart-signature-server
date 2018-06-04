@@ -43,5 +43,7 @@ module.exports = appInfo => {
     passwordField: 'captcha',
   };
 
+  config.masterKey = env.MASTER_KEY || '123456';
+
   return config;
 };
