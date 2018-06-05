@@ -44,6 +44,13 @@ module.exports = app => {
       defaultValue: 0,
     },
 
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: [ 'user_id', 'digiccy' ], // 用户每种币，只能有一个地址
+      },
+    ],
   });
 
   return Wallet;
