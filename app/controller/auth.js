@@ -17,7 +17,7 @@ class AuthController extends Controller {
     const isValid = await ctx.service.sms.checkCaptcha({ mobile, captcha });
 
     if (!isValid) {
-      ctx.throw('验证码不正确');
+      ctx.throw(400, '验证码不正确', { code: 'WRONG_CAPTCHA', errors: { mobile, captcha } });
     }
 
     let user = await ctx.service.user.find({ mobile });

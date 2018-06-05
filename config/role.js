@@ -16,7 +16,7 @@ module.exports = app => {
 
   app.role.failureHandler = (ctx, action) => {
     const message = 'Forbidden, required role: ' + action;
-    ctx.throw(403, message);
+    ctx.throw(403, message, { code: 'FORBIDDEN', errors: { action } });
   };
 };
 

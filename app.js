@@ -20,7 +20,7 @@ module.exports = app => {
       const isValid = await ctx.service.sms.checkCaptcha({ mobile, captcha });
 
       if (!isValid) {
-        ctx.throw('验证码不正确');
+        ctx.throw(400, '验证码不正确', { code: 'WRONG_CAPTCHA', errors: { mobile, captcha } });
       }
 
       const existsUser = await ctx.service.user.find({ mobile });
@@ -30,7 +30,7 @@ module.exports = app => {
       return newUser;
     }
 
-    ctx.throw('无效的Passport Provider:' + user.provider, { user });
+    ctx.throw(500, '无效的Passport Provider:' + user.provider, { code: 'INVALID_PASSPORT_PROVIDER', errors: user });
   });
 
   app.passport.serializeUser(async (ctx, user) => {

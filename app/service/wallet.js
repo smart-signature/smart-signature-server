@@ -24,7 +24,7 @@ class WalletService extends Service {
     });
 
     if (!wallet) {
-      ctx.throw('可用钱包库存不足');
+      ctx.throw(500, '可用钱包库存不足', { code: 'INSUFFICIENT_WALLET', errors: { user_id, digiccy } });
     }
 
     wallet.user_id = user_id;
@@ -66,7 +66,7 @@ class WalletService extends Service {
 
     const wallet = await ctx.model.Wallet.find({ where: { address } });
     if (!wallet) {
-      ctx.throw(404, 'wallet not found');
+      ctx.throw(404, '钱包不存在', { code: 'WALLET_NOT_FOUND', errors: { address } });
     }
 
     let balance = await ctx.web3.eth.getBalance(address);

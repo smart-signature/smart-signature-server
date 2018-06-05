@@ -7,10 +7,12 @@ const Service = require('egg').Service;
 class SmsService extends Service {
 
   async sendCaptcha(mobile) {
-    const { mock, provider } = this.ctx.app.config.smsVerify;
+    const ctx = this.ctx;
+
+    const { mock, provider } = ctx.app.config.smsVerify;
     const captcha = mock ? mock : '' + _.random(1000, 9999);
 
-    await this.ctx.model.SmsVerify.create({
+    await ctx.model.SmsVerify.create({
       mobile,
       captcha,
     });
@@ -20,7 +22,7 @@ class SmsService extends Service {
     }
 
     if (provider.type === 'yunpian') {
-      const result = await this.ctx.curl(provider.api, {
+      const result = await ctx.curl(provider.api, {
         method: 'POST',
         dataType: 'json',
         data: {
@@ -31,18 +33,20 @@ class SmsService extends Service {
       });
       // https://www.yunpian.com/doc/zh_CN/domestic/single_send.html
       if (result.data.code !== 0) {
-        this.ctx.throw(500, '调用云片网发送短信接口失败', { result });
+        ctx.throw(500, '调用云片网发送短信接口失败', { code: 'REQUEST_YP_FAIL', errors: result });
       }
     } else {
-      this.ctx.throw(500, '不支持的短信提供商', { provider });
+      ctx.throw(500, '不支持的短信提供商', { code: 'INVALID_SMS_PROVIDER', errors: provider });
     }
   }
 
   async checkCaptcha({ mobile, captcha }) {
-    const { Op } = this.ctx.app.Sequelize;
-    const { ttl } = this.ctx.app.config.smsVerify;
+    const ctx = this.ctx;
 
-    const count = await this.ctx.model.SmsVerify.count({
+    const { Op } = ctx.app.Sequelize;
+    const { ttl } = ctx.app.config.smsVerify;
+
+    const count = await ctx.model.SmsVerify.count({
       where: {
         mobile,
         captcha,
