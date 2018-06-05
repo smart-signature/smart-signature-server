@@ -27,10 +27,21 @@ class WalletService extends Service {
       ctx.throw(500, '可用钱包库存不足', { code: 'INSUFFICIENT_WALLET', errors: { user_id, digiccy } });
     }
 
-    wallet.user_id = user_id;
-    await wallet.save();
+    const [ count, wallets ] = await ctx.model.Wallet.update({
+      user_id,
+    }, {
+      where: {
+        id: wallet.id,
+        user_id: null, // 多人并发请求时，可能会出现多人抢同一个wallet，所以update时，再check一下是否没被人占用
+      },
+      returning: true,
+    });
 
-    return wallet;
+    if (count === 0) {
+      ctx.throw(500, '可用钱包库存不足', { code: 'INSUFFICIENT_WALLET', errors: { user_id, digiccy } });
+    }
+
+    return wallets[0];
   }
 
   async create() {
