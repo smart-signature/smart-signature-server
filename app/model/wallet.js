@@ -5,7 +5,17 @@ module.exports = app => {
 
   const Wallet = app.model.define('wallet', {
 
-    user_id: INTEGER,
+    id: {
+      type: INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+
+    user_id: {
+      type: INTEGER,
+      allowNull: true,
+      defaultValue: null,
+    },
 
     digiccy: {
       type: STRING,
@@ -15,7 +25,7 @@ module.exports = app => {
     status: {
       type: STRING,
       allowNull: false,
-      defaultValue: 'empty',
+      defaultValue: 'new',
     },
 
     address: {

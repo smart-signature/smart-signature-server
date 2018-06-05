@@ -7,6 +7,32 @@ const crypto = require('crypto');
 
 class WalletService extends Service {
 
+  // 给user_id分配一个digiccy可用的钱包
+  async request({ user_id, digiccy }) {
+    const ctx = this.ctx;
+
+    // 用户已经有了，就不再给他了
+    const existsWallet = await ctx.model.Wallet.find({ where: { digiccy, user_id } });
+    if (existsWallet) return existsWallet;
+
+    const wallet = await ctx.model.Wallet.findOne({
+      where: {
+        user_id: null,
+        digiccy,
+        status: 'normal',
+      },
+    });
+
+    if (!wallet) {
+      ctx.throw('可用钱包库存不足');
+    }
+
+    wallet.user_id = user_id;
+    await wallet.save();
+
+    return wallet;
+  }
+
   async create() {
     const privateKey = crypto.randomBytes(32);
     const publicKey = secp256k1.publicKeyCreate(privateKey, false).slice(1);

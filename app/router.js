@@ -15,6 +15,8 @@ module.exports = app => {
   router.get('/logout', controller.auth.logout);
   router.post('/passport/sms', app.passport.authenticate('sms', { successRedirect: '/user' }));
 
+  router.patch('/wallets/request', isUser, controller.wallet.request);
+
   router.post('/admin/db/reset', isAdmin, controller.admin.db.reset);
   router.post('/admin/wallets/dropToken', isAdmin, controller.admin.wallet.dropToken);
   router.post('/admin/wallets/syncBalance', isAdmin, controller.admin.wallet.syncBalance);
