@@ -19,6 +19,14 @@ class ItemController extends Controller {
     ctx.body = await ctx.service.item.create(item);
   }
 
+  async sync() {
+    const ctx = this.ctx;
+
+    const item_id = ctx.params.id;
+
+    ctx.body = await ctx.service.item.sync({ id: item_id });
+  }
+
 }
 
 module.exports = ItemController;

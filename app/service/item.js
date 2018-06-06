@@ -45,6 +45,51 @@ class ItemService extends Service {
       valueOptions,
     });
   }
+
+  async get({ id }) {
+    const ctx = this.ctx;
+
+    const item = await ctx.model.Item.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!item) {
+      ctx.throw(404, 'Item不存在', {
+        code: 'ITEM_NOT_FOUND',
+        errors: {
+          id,
+        },
+      });
+    }
+
+    return item;
+  }
+
+  // 根据tx获取receipt，然后更新creator_address，contract_address，token_id
+  async sync({ id }) {
+    const ctx = this.ctx;
+    const item = await this.get({ id });
+
+    const tx = item.tx;
+    const receipt = await ctx.web3.eth.getTransactionReceipt(tx);
+
+    if (receipt) {
+      const creator_address = receipt.from.toLowerCase();
+      const contract_address = receipt.to.toLowerCase();
+      const token_id = parseInt(receipt.logs[0].topics[1], 16);
+
+      item.creator_address = creator_address;
+      item.contract_address = contract_address;
+      item.token_id = token_id;
+
+      await item.save();
+    }
+
+    return item;
+  }
+
 }
 
 module.exports = ItemService;
