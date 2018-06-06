@@ -8,9 +8,10 @@ class ItemController extends Controller {
     const ctx = this.ctx;
 
     const user_id = ctx.user.id;
-    const { valueOptions, ponzi } = ctx.request.body;
+    const { valueOptions, ponzi, digiccy } = ctx.request.body;
 
     const item = {
+      digiccy,
       user_id,
       valueOptions,
       ponzi,

@@ -3,27 +3,11 @@
 const Service = require('egg').Service;
 
 class ItemService extends Service {
-  async create({ user_id, ponzi, valueOptions }) {
+
+  async create({ user_id, digiccy, ponzi, valueOptions }) {
     const ctx = this.ctx;
 
-    const digiccy = 'ETH';
-    const wallet = await ctx.model.Wallet.findOne({
-      where: {
-        user_id,
-        digiccy,
-        status: 'normal',
-      },
-    });
-
-    if (!wallet) {
-      ctx.throw(400, '用户没有' + digiccy + '钱包', {
-        code: 'USER_NO_WALLET',
-        errors: {
-          user_id,
-          digiccy,
-        },
-      });
-    }
+    const wallet = await ctx.service.wallet.get({ user_id, digiccy, status: 'normal' });
 
     const method = 'create';
     const from = wallet.address;
@@ -40,6 +24,7 @@ class ItemService extends Service {
     });
 
     return this.ctx.model.Item.create({
+      digiccy,
       tx,
       user_id,
       valueOptions,
