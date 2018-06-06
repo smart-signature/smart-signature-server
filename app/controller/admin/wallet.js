@@ -17,8 +17,14 @@ class WalletController extends Controller {
   async dropToken() {
     const ctx = this.ctx;
     const { address } = ctx.request.body;
-    this.ctx.body = await ctx.curl('http://faucet.ropsten.be:3001/donate/' + address, {
-      dataType: 'json',
+    this.ctx.body = await ctx.curl('https://faucet.metamask.io/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/rawdata',
+      },
+      data: address,
+      dataType: 'text',
+      timeout: 10000,
     });
   }
 
