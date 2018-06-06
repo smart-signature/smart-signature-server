@@ -22,9 +22,9 @@ module.exports = app => {
   router.post('/admin/wallets/syncBalance', isAdmin, controller.admin.wallet.syncBalance);
   router.resources('wallets', '/admin/wallets', isAdmin, controller.admin.wallet);
 
-  router.post('/items/:id/sync', controller.item.sync);
-
   router.post('/items', isUser, controller.item.create);
+  router.post('/items/:id/sync', controller.item.sync);
+  router.post('/items/:id/like', isUser, controller.item.like);
 
   router.get('/user', isUser, controller.user.current);
 };

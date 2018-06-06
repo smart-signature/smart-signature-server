@@ -90,6 +90,32 @@ class ItemService extends Service {
     return item;
   }
 
+  async like({ user_id, item_id, value }) {
+    const ctx = this.ctx;
+
+    const item = await this.get({ id: item_id });
+    const digiccy = item.digiccy;
+    const wallet = await ctx.service.wallet.get({ user_id, digiccy, status: 'normal' });
+    const token_id = item.token_id;
+    const referrer = '';
+
+    const method = 'sponsor';
+    const from = wallet.address;
+    const to = item.contract_address;
+    const args = [ token_id, referrer ];
+    const privateKey = wallet.privateKey;
+
+    const tx = await ctx.web3.callContract({
+      value,
+      method,
+      from,
+      to,
+      privateKey,
+      args,
+    });
+
+    return tx;
+  }
 }
 
 module.exports = ItemService;

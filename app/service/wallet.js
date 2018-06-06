@@ -7,6 +7,30 @@ const crypto = require('crypto');
 
 class WalletService extends Service {
 
+  async get({ user_id, digiccy, status }) {
+    const ctx = this.ctx;
+
+    const wallet = await ctx.model.Wallet.findOne({
+      where: {
+        user_id,
+        digiccy,
+        status,
+      },
+    });
+
+    if (!wallet) {
+      ctx.throw(400, '用户没有' + digiccy + '钱包', {
+        code: 'USER_NO_WALLET',
+        errors: {
+          user_id,
+          digiccy,
+        },
+      });
+    }
+
+    return wallet;
+  }
+
   // 给user_id分配一个digiccy可用的钱包
   async request({ user_id, digiccy }) {
     const ctx = this.ctx;
