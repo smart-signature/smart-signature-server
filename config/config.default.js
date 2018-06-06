@@ -45,5 +45,9 @@ module.exports = appInfo => {
 
   config.masterKey = env.MASTER_KEY || '123456';
 
+  // 未来可能有多个合约地址
+  // https://ropsten.etherscan.io/address/0x7e0ca9A3c1Bb74C7FD860453e5292b391866aa41
+  config.contract = '0x7e0ca9A3c1Bb74C7FD860453e5292b391866aa41';
+
   return config;
 };
