@@ -19,6 +19,25 @@ module.exports = app => {
       type: STRING,
     },
 
+    digiccy: {
+      type: STRING, // 对应的币种
+      allowNull: false,
+    },
+
+    contract_address: {
+      type: STRING, // 合约地址
+    },
+
+    creator_address: {
+      type: STRING, //  创建人地址
+    },
+
+    token_id: { // 在合约里的id
+      type: INTEGER,
+      allowNull: true,
+      defaultValue: null,
+    },
+
     user_id: {
       type: INTEGER,
       allowNull: true,
