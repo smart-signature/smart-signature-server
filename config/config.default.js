@@ -43,6 +43,11 @@ module.exports = appInfo => {
     passwordField: 'captcha',
   };
 
+  config.passportWechat = {
+    key: 'wx383fcab44a737883',
+    secret: '92faf999dd8b86c6a7236ec97ef2846b',
+  };
+
   config.masterKey = env.MASTER_KEY || '123456';
 
   // 未来可能有多个合约地址

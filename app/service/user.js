@@ -8,8 +8,8 @@ class UserService extends Service {
     return this.ctx.model.User.create(user);
   }
 
-  async find({ mobile }) {
-    return this.ctx.model.User.find({ where: { mobile } });
+  async find(where) {
+    return this.ctx.model.User.find({ where });
   }
 
 }

@@ -11,14 +11,41 @@ module.exports = app => {
       autoIncrement: true,
     },
 
-    mobile: {
-      type: STRING,
-      primaryKey: true,
-    },
-
     roles: {
       type: ARRAY(STRING),
       defaultValue: [ 'user' ],
+    },
+
+    mobile: {
+      type: STRING,
+    },
+
+    wechat_openid: {
+      type: STRING,
+    },
+
+    wechat_nickname: {
+      type: STRING,
+    },
+
+    wechat_sex: {
+      type: INTEGER,
+    },
+
+    wechat_headimgurl: {
+      type: STRING,
+    },
+
+    wechat_country: {
+      type: STRING,
+    },
+
+    wechat_province: {
+      type: STRING,
+    },
+
+    wechat_city: {
+      type: STRING,
     },
 
   });

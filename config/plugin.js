@@ -22,3 +22,8 @@ exports.passport = {
 exports.userrole = {
   package: 'egg-userrole',
 };
+
+exports.passportWechat = {
+  enable: true,
+  path: path.join(__dirname, '../lib/plugin/egg-passport-wechat'),
+};

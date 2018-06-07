@@ -28,6 +28,18 @@ module.exports = app => {
 
       const newUser = await ctx.service.user.create({ mobile });
       return newUser;
+    } else if (user.provider === 'wechat') {
+      const wechatUser = {};
+      [ 'openid', 'nickname', 'sex', 'city', 'province', 'country', 'headimgurl' ].forEach(key => {
+        wechatUser['wechat_' + key] = user[key];
+      });
+
+      const wechat_openid = wechatUser.wechat_openid;
+      const existsUser = await ctx.service.user.find({ wechat_openid });
+      if (existsUser) return existsUser;
+
+      const newUser = await ctx.service.user.create(wechatUser);
+      return newUser;
     }
 
     ctx.throw(500, '无效的Passport Provider:' + user.provider, { code: 'INVALID_PASSPORT_PROVIDER', errors: user });
