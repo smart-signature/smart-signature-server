@@ -32,4 +32,5 @@ module.exports = app => {
   router.post('/items/:id/like', isUser, controller.item.like);
 
   router.get('/user', isUser, controller.user.current);
+  router.get('/users/:user_id', controller.user.getUser);
 };
