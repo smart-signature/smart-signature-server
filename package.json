@@ -6,6 +6,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "egg": "^2.2.1",
+    "egg-cors": "^2.0.0",
     "egg-passport": "^2.0.1",
     "egg-scripts": "^2.5.0",
     "egg-sequelize": "^3.1.4",

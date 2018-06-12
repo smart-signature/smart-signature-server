@@ -27,3 +27,8 @@ exports.passportWechat = {
   enable: true,
   path: path.join(__dirname, '../lib/plugin/egg-passport-wechat'),
 };
+
+exports.cors = {
+  enable: true,
+  package: 'egg-cors',
+};

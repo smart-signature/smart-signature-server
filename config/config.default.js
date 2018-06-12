@@ -27,6 +27,10 @@ module.exports = appInfo => {
     },
   };
 
+  config.cors = {
+    origin: '*', // TODO: use security domainWhiteList in production
+  };
+
   config.smsVerify = {
     ttl: 10, // 验证码有效期（分钟）
     mock: env.SMS_MOCK, // 如果设置了mock，就不会真正去发短信
