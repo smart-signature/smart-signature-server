@@ -9,7 +9,7 @@ module.exports = app => {
   const isUser = app.role.can('user');
   const isAdmin = app.role.can('admin');
 
-  const passportWechat = app.passport.authenticate('wechat', { successRedirect: '/user' });
+  const passportWechat = app.passport.authenticate('wechat', { successRedirect: '/login/wechat/success' });
 
   router.get('/', controller.home.index);
   router.post('/sendVerifySMS', controller.auth.sendVerifySMS);
@@ -17,6 +17,8 @@ module.exports = app => {
   router.get('/logout', controller.auth.logout);
 
   router.post('/passport/sms', app.passport.authenticate('sms', { successRedirect: '/user' }));
+  router.get('/login/wechat', controller.auth.loginByWechat);
+  router.get('/login/wechat/success', controller.auth.wechatLoginSuccess);
   router.get('/passport/wechat', passportWechat);
   router.get('/passport/wechat/callback', passportWechat);
 

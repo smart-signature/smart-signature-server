@@ -34,6 +34,21 @@ class AuthController extends Controller {
     ctx.logout();
     ctx.body = {};
   }
+
+  async loginByWechat() {
+    const ctx = this.ctx;
+    const redirect = ctx.query.redirect;
+    ctx.session.wechat_login_redirect = redirect;
+    ctx.redirect('/passport/wechat');
+  }
+
+  async wechatLoginSuccess() {
+    const ctx = this.ctx;
+    const redirect = ctx.session.wechat_login_redirect;
+    // TODO: put redirect in security domain while list
+    // Ref: https://github.com/eggjs/egg/blob/master/docs/source/en/core/security.md#prevention-4
+    ctx.unsafeRedirect(redirect);
+  }
 }
 
 module.exports = AuthController;
