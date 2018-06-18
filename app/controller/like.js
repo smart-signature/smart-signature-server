@@ -6,13 +6,13 @@ class LikeController extends Controller {
   async create() {
     const ctx = this.ctx;
 
-    const from_user_id = ctx.user.id;
-    const { to_user_id, value, message, item_id, digiccy } = ctx.request.body;
+    const fromUserId = ctx.user.id;
+    const { toUserId, itemId = 0, value, digiccy = 'ETH', message = '' } = ctx.request.body;
 
     ctx.body = await ctx.service.like.create({
-      from_user_id,
-      to_user_id,
-      item_id,
+      fromUserId,
+      toUserId,
+      itemId,
       value,
       digiccy,
       message,

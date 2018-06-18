@@ -3,16 +3,17 @@
 const Service = require('egg').Service;
 
 class LikeService extends Service {
-  async create({ from_user_id, to_user_id, item_id, value, digiccy, message }) {
+
+  async create({ fromUserId, toUserId, itemId, value, digiccy, message }) {
     const ctx = this.ctx;
 
     const from_wallet = await ctx.service.wallet.get({
-      user_id: from_user_id,
+      user_id: fromUserId,
       digiccy,
     });
 
     const to_wallet = await ctx.service.wallet.get({
-      user_id: to_user_id,
+      user_id: toUserId,
       digiccy,
     });
 
@@ -24,11 +25,11 @@ class LikeService extends Service {
 
     return this.ctx.model.Like.create({
       tx_hash,
-      from_user_id,
-      to_user_id,
+      from_user_id: fromUserId,
+      to_user_id: toUserId,
       from_address,
       to_address,
-      item_id,
+      item_id: itemId,
       value,
       digiccy,
       message,
