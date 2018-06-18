@@ -35,6 +35,37 @@ class LikeService extends Service {
       message,
     });
   }
+
+  async list(query = {}) {
+    const ctx = this.ctx;
+
+    const limit = query.limit || 25;
+    const offset = query.offset || 0;
+    const where = {};
+
+    if (query.toUserId !== undefined) {
+      where.to_user_id = query.toUserId;
+    }
+
+    const option = {
+      limit,
+      offset,
+      where,
+      order: [[ 'updated_at', 'DESC' ]],
+      include: [
+        {
+          model: ctx.model.User,
+          as: 'fromUser',
+        },
+        {
+          model: ctx.model.User,
+          as: 'toUser',
+        },
+      ],
+    };
+
+    return ctx.model.Like.findAndCountAll(option);
+  }
 }
 
 module.exports = LikeService;

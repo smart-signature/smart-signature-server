@@ -53,5 +53,17 @@ module.exports = app => {
 
   });
 
+  Like.associate = function() {
+    app.model.Like.belongsTo(app.model.User, {
+      foreignKey: 'from_user_id',
+      as: 'fromUser',
+    });
+
+    app.model.Like.belongsTo(app.model.User, {
+      foreignKey: 'to_user_id',
+      as: 'toUser',
+    });
+  };
+
   return Like;
 };
