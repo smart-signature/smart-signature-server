@@ -3,6 +3,22 @@
 const Controller = require('egg').Controller;
 
 class LikeController extends Controller {
+  async create() {
+    const ctx = this.ctx;
+
+    const from_user_id = ctx.user.id;
+    const { to_user_id, value, message, item_id, digiccy } = ctx.request.body;
+
+    ctx.body = await ctx.service.like.create({
+      from_user_id,
+      to_user_id,
+      item_id,
+      value,
+      digiccy,
+      message,
+    });
+  }
+
   async list() {
     const ctx = this.ctx;
     // TODO: remove mock

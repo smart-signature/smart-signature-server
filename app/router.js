@@ -37,4 +37,5 @@ module.exports = app => {
   router.get('/users/:user_id', controller.user.getUser);
 
   router.get('/likes', controller.like.list);
+  router.post('/likes', isUser, controller.like.create);
 };
