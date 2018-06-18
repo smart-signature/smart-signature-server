@@ -47,6 +47,10 @@ module.exports = app => {
       type: STRING,
     },
 
+    tx_status: {
+      type: STRING, // Pending, Successful and Failed.
+    },
+
   });
 
   return Like;
