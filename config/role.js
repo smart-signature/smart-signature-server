@@ -10,13 +10,25 @@ module.exports = app => {
     if (body && ctx.app.config.masterKey === body.masterKey) {
       return true;
     }
-
     return ctx.user && ctx.user.roles.includes('admin');
   });
 
   app.role.failureHandler = (ctx, action) => {
-    const message = 'Forbidden, required role: ' + action;
-    ctx.throw(403, message, { code: 'FORBIDDEN', errors: { action } });
+    let message,
+      code,
+      httpStatus;
+
+    if (action === 'user') {
+      httpStatus = 401; // 未登录
+      code = 'UNAUTHORIZED';
+      message = 'Unauthorized';
+    } else {
+      httpStatus = 403; // 已登录，但是权限不够
+      code = 'FORBIDDEN';
+      message = 'Forbidden, required role: ' + action;
+    }
+
+    ctx.throw(httpStatus, message, { code, errors: { action } });
   };
 };
 
