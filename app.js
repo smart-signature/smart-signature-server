@@ -15,6 +15,7 @@ module.exports = app => {
   }));
 
   app.passport.verify(async (ctx, user) => {
+    let newUser;
     if (user.provider === 'sms') {
       const { mobile, captcha } = user;
       const isValid = await ctx.service.sms.checkCaptcha({ mobile, captcha });
@@ -26,8 +27,7 @@ module.exports = app => {
       const existsUser = await ctx.service.user.find({ mobile });
       if (existsUser) return existsUser;
 
-      const newUser = await ctx.service.user.create({ mobile });
-      return newUser;
+      newUser = await ctx.service.user.create({ mobile });
     } else if (user.provider === 'wechat') {
       const wechatUser = {};
       [ 'openid', 'nickname', 'sex', 'city', 'province', 'country', 'headimgurl' ].forEach(key => {
@@ -37,8 +37,12 @@ module.exports = app => {
       const wechat_openid = wechatUser.wechat_openid;
       const existsUser = await ctx.service.user.find({ wechat_openid });
       if (existsUser) return existsUser;
+      newUser = await ctx.service.user.create(wechatUser);
+    }
 
-      const newUser = await ctx.service.user.create(wechatUser);
+    if (newUser) {
+      // 新的用户，自动帮用户申请绑定一个钱包
+      ctx.service.wallet.request({ user_id: newUser.id, digiccy: 'ETH' });
       return newUser;
     }
 
