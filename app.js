@@ -41,8 +41,8 @@ module.exports = app => {
     }
 
     if (newUser) {
-      // 新的用户，自动帮用户申请绑定一个钱包
-      ctx.service.wallet.request({ user_id: newUser.id, digiccy: 'ETH' });
+      // 新的用户，自动帮用户创建一个钱包
+      ctx.service.wallet.create({ user_id: newUser.id, digiccy: 'ETH' });
       return newUser;
     }
 

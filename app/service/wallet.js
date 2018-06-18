@@ -7,7 +7,7 @@ const crypto = require('crypto');
 
 class WalletService extends Service {
 
-  async get({ user_id, digiccy, status }) {
+  async get({ user_id, digiccy = 'ETH', status = 'normal' }) {
     const ctx = this.ctx;
 
     const wallet = await ctx.model.Wallet.findOne({
@@ -68,17 +68,22 @@ class WalletService extends Service {
     return wallets[0];
   }
 
-  async create() {
+  async create({ user_id, digiccy = 'ETH', status = 'normal' }) {
     const privateKey = crypto.randomBytes(32);
     const publicKey = secp256k1.publicKeyCreate(privateKey, false).slice(1);
     const address = createKeccakHash('keccak256').update(publicKey).digest()
       .slice(-20);
 
     const wallet = {
-      digiccy: 'ETH',
-      privateKey: privateKey.toString('hex'),
-      address: '0x' + address.toString('hex'),
+      status,
+      digiccy,
+      privateKey: privateKey.toString('hex').toLowerCase(),
+      address: '0x' + address.toString('hex').toLowerCase(),
     };
+
+    if (user_id !== undefined) {
+      wallet.user_id = user_id;
+    }
 
     return this.ctx.model.Wallet.create(wallet);
   }
