@@ -9,7 +9,7 @@ class UserService extends Service {
   }
 
   async getByAddress(address) {
-    // TODO: 检查address是否合法
+    // TODO: address统一变小写，检查address是否合法
     // ctx.throw(400, '无效地址', { code: 'INVALID_ADDRESS', error: { address } });
 
     // 从数据库里读取用户信息
@@ -28,6 +28,28 @@ class UserService extends Service {
     };
 
     return { ...userInDB, ...userInChain };
+  }
+
+  async updateByAddress(address, updates) {
+    const ctx = this.ctx;
+    // TODO: address统一变小写，检查address是否合法
+    // ctx.throw(400, '无效地址', { code: 'INVALID_ADDRESS', error: { address } });
+
+    let user = await this.ctx.model.User.find({ where: { address } });
+    if (!user) {
+      ctx.throw(404, `地址（address: ${address})的用户不存在`, { code: 'USER_NOT_FOUND', errors: { address } })
+    }
+
+    // 检查更新参数是否合法
+    const illegal = Object.keys(updates).some((key) => {
+      return !['nickname', 'bio', 'avatar_url'].includes(key);
+    });
+    if (illegal) {
+      ctx.throw(400, `更新用户信息参数错误`, { code: 'ILLEGAL_UPDATE_USER_PRAM', errors: { address, updates } })
+    }
+
+    await user.update(updates);
+    return this.getByAddress(address);
   }
 
 }
