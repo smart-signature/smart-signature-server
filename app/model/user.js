@@ -11,12 +11,44 @@ module.exports = app => {
       autoIncrement: true,
     },
 
+    address: {
+      type: STRING,
+    },
+
+    private_key: {
+      type: STRING,
+    },
+
     roles: {
       type: ARRAY(STRING),
       defaultValue: [ 'user' ],
     },
 
     mobile: {
+      type: STRING,
+    },
+
+    password: {
+      type: STRING,
+    },
+
+    nickname: {
+      type: STRING,
+    },
+
+    bio: {
+      type: STRING,
+    },
+
+    avatar_url: {
+      type: STRING,
+    },
+
+    gender: {
+      type: STRING,
+    },
+
+    location: {
       type: STRING,
     },
 
@@ -49,6 +81,14 @@ module.exports = app => {
     },
 
   });
+
+  User.prototype.toJSON = function() {
+    const values = Object.assign({}, this.get());
+    [ 'roles', 'mobile', 'password', 'wechat_openid', 'private_key' ].forEach(key => {
+      delete values[key];
+    });
+    return values;
+  };
 
   return User;
 };
