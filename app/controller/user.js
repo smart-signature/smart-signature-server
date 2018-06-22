@@ -39,6 +39,25 @@ class UserController extends Controller {
     ctx.body = { address };
   }
 
+  async createLike() {
+    const ctx = this.ctx;
+
+    const to_address = ctx.params.address;
+    const item_id = ctx.params.item_id;
+    const { from_user_id, value, message, referrer } = ctx.request.body;
+
+    // TODO: 检查权限 只有本人 或者 管理员 才有权限
+    // ctx.throw();
+
+    ctx.body = await ctx.service.user.createLike({
+      from_user_id,
+      to_address,
+      item_id,
+      value,
+      message,
+      referrer,
+    });
+  }
 }
 
 module.exports = UserController;

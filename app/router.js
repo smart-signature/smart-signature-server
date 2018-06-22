@@ -37,6 +37,8 @@ module.exports = app => {
   router.get('/users/:address', controller.user.getUser);
   router.patch('/users/:address', controller.user.updateUser);
   router.post('/users/:id/wallet', controller.user.createWallet);
+  // 创建打赏
+  router.post('/users/:address/items/:item_id/likes', controller.user.createLike);
 
   router.get('/likes', controller.like.list);
   router.post('/likes', isUser, controller.like.create);

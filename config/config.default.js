@@ -60,5 +60,10 @@ module.exports = appInfo => {
   // https://ropsten.etherscan.io/address/0x7e0ca9A3c1Bb74C7FD860453e5292b391866aa41
   config.contract = '0x7e0ca9A3c1Bb74C7FD860453e5292b391866aa41';
 
+  config.blockchain = {
+    contract_address: '0xed608ed37a7635a175be1a183bfc87f3b4a69be3',
+    etherscan_host: 'https://ropsten.etherscan.io',
+  };
+
   return config;
 };

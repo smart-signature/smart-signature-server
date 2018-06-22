@@ -127,6 +127,29 @@ class UserService extends Service {
     };
   }
 
+  // 创建一个打赏
+  async createLike({ from_user_id, to_address, item_id, value, message, referrer }) {
+    const ctx = this.ctx;
+
+    const from_user = await ctx.model.User.find({ where: { id: from_user_id } });
+    if (!from_user) {
+      ctx.throw(400, `用户(id: ${from_user_id})不存在`, { code: 'USER_NOT_FOUND', errors: { from_user_id } });
+    }
+    if (!from_user.address || !from_user.private_key) {
+      ctx.throw(400, `用户(id: ${from_user_id})没有钱包`, { code: 'USER_HAS_NO_WALLET', errors: { from_user_id } });
+    }
+
+    const tx_hash = await ctx.web3.callContract({
+      value,
+      method: 'like',
+      from: from_user.address,
+      to: ctx.app.config.blockchain.contract_address,
+      privateKey: from_user.private_key,
+      args: [ from_user.address, to_address, item_id, message, referrer ],
+    });
+
+    return { tx_hash, tx_link: ctx.app.config.blockchain.etherscan_host + '/tx/' + tx_hash };
+  }
 }
 
 module.exports = UserService;
