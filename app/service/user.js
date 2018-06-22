@@ -8,6 +8,44 @@ class UserService extends Service {
     return this.ctx.model.User.create(user);
   }
 
+  // 短信验证码登录
+  async loginBySMS({ mobile, captcha }) {
+    const ctx = this.ctx;
+
+    const isValid = await ctx.service.sms.checkCaptcha({ mobile, captcha });
+    if (!isValid) {
+      ctx.throw(400, '验证码不正确', { code: 'WRONG_CAPTCHA', errors: { mobile, captcha } });
+    }
+
+    const exist_user = await ctx.model.User.find({ where: { mobile } });
+    console.log(exist_user);
+    if (exist_user) return exist_user;
+
+
+    return ctx.model.User.create({ mobile });
+  }
+
+  // 微信登录
+  async loginByWechat(info) {
+    const ctx = this.ctx;
+
+    const wechat_info = {};
+    ['openid', 'nickname', 'sex', 'city', 'province', 'country', 'headimgurl'].forEach(key => {
+      wechat_info['wechat_' + key] = info[key];
+    });
+    let exist_user = await ctx.model.User.find({ where: { wechat_openid: wechat_info.wechat_openid } });
+    let user;
+
+    if (exist_user) {
+      // 更新微信的相关资料
+      user = await exist_user.update(wechat_info);
+    } else { // 首次登录，创建新用户
+      user = await ctx.model.User.create(wechat_info);
+    }
+
+    return user;
+  }
+
   async getByAddress(address) {
     // TODO: address统一变小写，检查address是否合法
     // ctx.throw(400, '无效地址', { code: 'INVALID_ADDRESS', error: { address } });
