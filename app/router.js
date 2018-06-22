@@ -36,6 +36,7 @@ module.exports = app => {
   router.get('/user', isUser, controller.user.current);
   router.get('/users/:address', controller.user.getUser);
   router.patch('/users/:address', controller.user.updateUser);
+  router.post('/users/:id/wallet', controller.user.createWallet);
 
   router.get('/likes', controller.like.list);
   router.post('/likes', isUser, controller.like.create);

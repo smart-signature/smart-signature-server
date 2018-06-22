@@ -1,7 +1,9 @@
 'use strict';
 
 const Service = require('egg').Service;
-
+const secp256k1 = require('secp256k1/elliptic');
+const createKeccakHash = require('keccak');
+const crypto = require('crypto');
 class UserService extends Service {
 
   async create(user) {
@@ -18,9 +20,7 @@ class UserService extends Service {
     }
 
     const exist_user = await ctx.model.User.find({ where: { mobile } });
-    console.log(exist_user);
     if (exist_user) return exist_user;
-
 
     return ctx.model.User.create({ mobile });
   }
@@ -88,6 +88,43 @@ class UserService extends Service {
 
     await user.update(updates);
     return this.getByAddress(address);
+  }
+
+  // 创建钱包
+  async createWallet(user_id) {
+    const ctx = this.ctx;
+
+    const user = await ctx.model.User.find({ where: { id: user_id } });
+    if (!user) {
+      ctx.throw(400, `用户(id: ${user_id})不存在`, { code: 'USER_NOT_FOUND', errors: { user_id } });
+    }
+    if (user.address) {
+      ctx.throw(400, `用户(id: ${user_id})已有钱包，无法创建新的`, { code: 'USER_ALREADY_HAS_WALLET', errors: { user_id, address: user.address } });
+    }
+
+    let private_key = crypto.randomBytes(32);
+    const publicKey = secp256k1.publicKeyCreate(private_key, false).slice(1);
+    let address = createKeccakHash('keccak256').update(publicKey).digest()
+      .slice(-20);
+    private_key = private_key.toString('hex').toLowerCase();
+    address = '0x' + address.toString('hex').toLowerCase();
+
+    await ctx.model.User.update({
+      address,
+      private_key
+    }, {
+        where: {
+          id: user_id,
+          address: null, // 如果同一个用户高并发打过来，可能会被更新多次, 所以不要用user.updates({address,private_key})
+          private_key: null,
+        },
+        returning: true,
+      });
+
+    return {
+      address,
+      private_key
+    };
   }
 
 }
